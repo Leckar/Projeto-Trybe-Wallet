@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
-import { GET_ERROR, REQUEST_API, RESPONSE_API } from '../actions';
+import { REQUEST_API, RESPONSE_API } from '../actions';
+import user from './user';
 
 // import user from './user';
 // import wallet from './wallet';
@@ -8,7 +9,6 @@ import { GET_ERROR, REQUEST_API, RESPONSE_API } from '../actions';
 // ATENÇÃO: você obrigatoriamente tem que utilizar as chaves "user" e "wallet" no seu estado global
 const INITIAL_STATE = {
   loading: false,
-  error: null,
 };
 
 function getMoney(state = INITIAL_STATE, action) {
@@ -24,16 +24,11 @@ function getMoney(state = INITIAL_STATE, action) {
       ...state,
       loading: false,
     };
-  case GET_ERROR:
-    return {
-      ...state,
-      error: action.error,
-    };
   default:
     return state;
   }
 }
 
-const rootReducer = combineReducers({ getMoney });
+const rootReducer = combineReducers({ getMoney, user });
 
 export default rootReducer;
