@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { saveExpenses } from '../redux/actions';
+import { editExpenses, saveExpenses } from '../redux/actions';
 import { ENDPOINT, fetchAPI } from '../services/fetchAPI';
 
+const INITIAL_CURRENCY = 'USD';
+const INITIAL_METH0D = 'Dinheiro';
+const INITIAL_TAG = 'Alimentação';
 class WalletForm extends Component {
   state = {
     value: '',
     description: '',
-    currency: 'USD',
-    method: 'Dinheiro',
-    tag: 'Alimentação',
+    currency: INITIAL_CURRENCY,
+    method: INITIAL_METH0D,
+    tag: INITIAL_TAG,
   };
 
   handleChange = ({ target }) => {
@@ -38,9 +41,29 @@ class WalletForm extends Component {
     this.setState({
       value: '',
       description: '',
-      currency: 'USD',
-      method: 'Dinheiro',
-      tag: 'Alimentação',
+      currency: INITIAL_CURRENCY,
+      method: INITIAL_METH0D,
+      tag: INITIAL_TAG,
+    });
+  };
+
+  saveEditedExpense = async () => {
+    const { expenses, dispatch, targetData: { id, exchangeRates } } = this.props;
+    const { value, description, currency,
+      method, tag } = this.state;
+    const newList = expenses.map((e) => {
+      if (e.id === id) {
+        return { id, value, description, currency, method, tag, exchangeRates };
+      }
+      return e;
+    });
+    await dispatch(editExpenses(newList));
+    this.setState({
+      value: '',
+      description: '',
+      currency: INITIAL_CURRENCY,
+      method: INITIAL_METH0D,
+      tag: INITIAL_TAG,
     });
   };
 
@@ -52,7 +75,7 @@ class WalletForm extends Component {
       method,
       tag,
     } = this.state;
-    const { currencies } = this.props;
+    const { currencies, editMode } = this.props;
     return (
       <form>
         <label htmlFor="valor">
@@ -128,9 +151,9 @@ class WalletForm extends Component {
         </label>
         <button
           type="button"
-          onClick={ this.submitExpenses }
+          onClick={ editMode ? this.saveEditedExpense : this.submitExpenses }
         >
-          Adicionar despesa
+          { editMode ? 'Editar despesa' : 'Adicionar despesa' }
         </button>
       </form>
     );
@@ -140,7 +163,9 @@ class WalletForm extends Component {
 function mapStateToProps(state) {
   return ({
     currencies: state.wallet.currencies,
+    editMode: state.wallet.editMode,
     expenses: state.wallet.expenses,
+    targetData: state.wallet.targetData,
   });
 }
 
@@ -154,9 +179,14 @@ WalletForm.propTypes = {
   currencies: PropTypes.arrayOf(
     PropTypes.string,
   ).isRequired,
+  editMode: PropTypes.bool.isRequired,
   expenses: PropTypes.arrayOf(
     PropTypes.shape({}),
   ).isRequired,
   dispatch: PropTypes.func.isRequired,
+  targetData: PropTypes.shape({
+    id: PropTypes.string,
+    exchangeRates: PropTypes.shape({}),
+  }).isRequired,
 };
 export default connect(mapStateToProps)(WalletForm);
