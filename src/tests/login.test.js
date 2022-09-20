@@ -17,10 +17,6 @@ describe('Tests if the login screen works as intended', () => {
     userEvent.type(pwdInput, '123456');
     userEvent.click(bttn);
     await waitFor(() => {
-      expect(bttn).not.toBeInTheDocument();
-    });
-    history.push('/carteira');
-    await waitFor(() => {
       expect(history.location.pathname).toBe('/carteira');
     });
   });
