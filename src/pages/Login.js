@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { saveCredentials } from '../redux/actions';
+import { fetchCurrency, saveCredentials } from '../redux/actions';
 
 class Login extends React.Component {
   state = {
@@ -39,10 +39,11 @@ class Login extends React.Component {
     }, () => this.validityCheck(target));
   };
 
-  loginHandler = () => {
+  loginHandler = async () => {
     const { login } = this.state;
     const { dispatch, history } = this.props;
     dispatch(saveCredentials(login));
+    await dispatch(fetchCurrency());
     history.push('/carteira');
   };
 
