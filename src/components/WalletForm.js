@@ -169,12 +169,6 @@ function mapStateToProps(state) {
   });
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     saveExpenses: () => dispatch(saveExpenses()),
-//   };
-// }
-
 WalletForm.propTypes = {
   currencies: PropTypes.arrayOf(
     PropTypes.string,

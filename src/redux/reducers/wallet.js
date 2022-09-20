@@ -3,7 +3,7 @@ import { EXPENSES, MODIFICATION, REQUEST_API,
   RESPONSE_API, TARGET_DATA } from '../actions';
 
 const INITIAL_STATE = {
-  loading: false,
+  loading: true,
   currencies: [],
   expenses: [],
   targetData: {},
